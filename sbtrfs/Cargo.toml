@@ -1,0 +1,6 @@
+[package]
+name = "sbtrfs"
+version = "0.1.0"
+authors = ["detuur <detuur@gmail.com>"]
+
+[dependencies]
