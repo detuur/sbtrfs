@@ -2,6 +2,8 @@ extern crate fuse;
 extern crate libc;
 extern crate time;
 
+mod maintenance;
+
 use std::path::Path;
 use libc::{ENOENT, ENOSYS};
 use time::Timespec;
@@ -17,7 +19,7 @@ impl Filesystem for SbFilesystem {
     }
 }
 
-fn main() {
+fn main2() {
     let mountpoint = match env::args().nth(1) {
         Some(path) => path,
         None => {
@@ -26,4 +28,28 @@ fn main() {
         }
     };
     fuse::mount(SbFilesystem, &mountpoint, &[]);
+}
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() == 1 {
+        // TODO: Something
+        println!("Please use arguments");
+        return;
+    }
+
+    match args[1].as_ref() {
+        "mount"     => mount( Path::new( &args[2] ) ),
+        "create"    => create( Path::new( &args[2] ) ),
+        _           => panic!("only mount and create for now")
+    }
+}
+
+fn mount( path:&Path ) {
+    println!("disabled");
+}
+
+fn create( path:&Path) {
+    let file = maintenance::InitialiseFS( &path );
 }
