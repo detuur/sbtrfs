@@ -1,24 +1,22 @@
-use std::error::Error;
 use std::fs::File;
 use std::fs::OpenOptions;
-use std::io::prelude::*;
 use std::path::Path;
 
-pub fn InitialiseFS( fileName: &Path ) -> File {
+pub fn initialise_fs( file_name: &Path ) -> File {
     let mut file = match  OpenOptions::new()
                            .read(true)
                            .write(true)
                            .create(true)
-                           .open( fileName ) {
+                           .open( file_name ) {
         Ok(file) => file,
-        Err(err) => panic!("File at path '{:?}' can't be accesed", fileName)
+        Err(_) => panic!("File at path '{:?}' can't be accesed", file_name)
     };
-    
-    WriteSuperBlock( &mut file );
+
+    write_super_block( &mut file );
     return file;
 
 }
 
-fn WriteSuperBlock ( fileHandle: &mut File ) {
+fn write_super_block ( file: &mut File ) {
     println!("Just created a SuperBlock in the loaded file");
 }
