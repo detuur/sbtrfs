@@ -1,6 +1,7 @@
 extern crate fuse;
 extern crate libc;
 extern crate time;
+extern crate byteorder;
 
 use std::path::Path;
 use std::env;
