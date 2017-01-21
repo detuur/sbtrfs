@@ -7,21 +7,20 @@ pub fn initialise_fs( file_name: &Path ) -> File {
     let mut file = match  OpenOptions::new()
                            .read(true)
                            .write(true)
-                           .create(true)
+                           .create_new(true)
                            .open( file_name ) {
         Ok(file) => file,
-        Err(_) => panic!("File at path '{:?}' can't be accesed", file_name)
+        Err(_) => panic!("File at path {:?} can't be accessed", file_name)
     };
 
     write_super_block( &mut file );
     return file;
-
 }
 
 fn write_super_block ( file: &mut File ) {
     // Write our unique magic: 5(S)ecure Btrfs File 5(S)ystem
     let magic_bytes:u16 = 0x5BF5;
     file.write_u16::<BigEndian>( magic_bytes ).unwrap();
-    file.set_len( 40*1024*1024 );   // 40MB
+    file.set_len( 40*1024*1024 );   // TODO: Not make this hardcoded to 40MB
     println!("Just created a SuperBlock in the loaded file");
 }
