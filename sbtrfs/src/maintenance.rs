@@ -7,7 +7,7 @@ pub fn initialise_fs( file_name: &Path ) -> File {
     let mut file = match  OpenOptions::new()
                            .read(true)
                            .write(true)
-                           .create_new(true)
+                           .create(true)
                            .open( file_name ) {
         Ok(file) => file,
         Err(_) => panic!("File at path {:?} can't be accessed", file_name)
