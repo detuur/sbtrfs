@@ -9,6 +9,9 @@ use std::env;
 mod maintenance;
 mod fusebindings;
 
+mod inode;
+mod bitmap;
+
 
 fn main() {
     let args: Vec<String> = env::args().collect();

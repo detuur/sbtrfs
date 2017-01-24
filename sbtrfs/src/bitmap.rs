@@ -7,36 +7,39 @@ struct BitMap {
 impl BitMap {
     pub fn read_bit( &self, index: u32 ) -> bool {
         // read the bit
-        let v = &self.map[index / 8];
-        let mask = get_mask( index % 8 );
+        let v = &self.map[(index / 8) as usize];
+        let mask = self.get_mask( (index % 8) as u8 );
         return ( v & mask ) > 0;
     }
 
-    pub fn set_bit( &self, index: u32, value: bool ) -> () {
+    pub fn set_bit( &mut self, index: u32, value: bool ) -> () {
         // set bit
-        let v = &mut self.map[index / 8];
-        let mask = get_mask( index % 8 );
+        let mask = self.get_mask( (index % 8) as u8);
+        let v = &mut self.map[(index / 8) as usize];
         match value {
-            true => *v = *v | mask;
-            false => *v = *v & !mask;
+            true => *v = *v | mask,
+            false => *v = *v & !mask
         }
 
     }
 
     fn get_mask( &self, remainder: u8 ) -> u8 {
-        return 128:u8 >> remainder%8;
+        return 128 as u8 >> remainder%8;
     }
 
     pub fn next_free ( &self, size: u32 ) -> Option<u32> {
-        let mut index = 0;
-        while index < self.map.len() {
+        let mut index:u32 = 0;
+        while index < self.map.len() as u32 {
             let mut free = true;
-            let mut growsize = 0;
+            let mut growsize:u32 = 0;
             while free {
-                if growsize == size
+                if growsize == size {
                     return Some(index);
-                free = read_bit(index + growsize++);
+                }
+                free = self.read_bit(index + growsize);
+                growsize = growsize + 1;
             }
+            index = index + growsize;
         }
         return None;
     }
