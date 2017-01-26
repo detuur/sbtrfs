@@ -11,6 +11,7 @@ mod fusebindings;
 
 mod inode;
 mod bitmap;
+mod dir;
 
 
 fn main() {

@@ -1,8 +1,7 @@
-use std::io::Write;
-use byteorder::{BigEndian, WriteBytesExt};
+use std::io::{Write, Read, Cursor};
+use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
 
-
-struct INode {
+pub struct INode {
     permissions: u16,
     uid: u32,
     size: u32,
@@ -22,6 +21,19 @@ impl INode {
         assert_eq!( buf.len() + self.padding.len(), 256);
         return buf;
     }
+
+    pub fn deserialise( buf: &[u8] ) -> INode {
+        let mut rdr = Cursor::new(buf);
+        INode {
+            permissions     : rdr.read_u16::<BigEndian>().unwrap(),
+            uid             : rdr.read_u32::<BigEndian>().unwrap(),
+            size            : rdr.read_u32::<BigEndian>().unwrap(),
+            pointer         : rdr.read_u32::<BigEndian>().unwrap(),
+            mode            : rdr.read_u8().unwrap(),
+            padding         : [0; 241]
+        }
+    }
+            
 
     pub fn num_of_blocks( &self ) -> u32 {
         return self.size / 4096 + 1;

@@ -1,10 +1,25 @@
-struct BitMap {
+use std::io::{Write, Read, Cursor};
+use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
+
+pub struct BitMap {
     map: Vec<u8>,
     offset: u32,
     size: u32
 }
 
 impl BitMap {
+    pub fn deserialise( buf: &[u8], offset: u32, size: u32 ) -> BitMap {
+        let mut rdr = Cursor::new(buf);
+        let mut newmap: Vec<u8> = Vec::new();
+        rdr.read_to_end( &mut newmap );
+
+        BitMap {
+            size: size,
+            offset: offset,
+            map: newmap
+        }
+    }
+
     pub fn read_bit( &self, index: u32 ) -> bool {
         // read the bit
         let v = &self.map[(index / 8) as usize];
