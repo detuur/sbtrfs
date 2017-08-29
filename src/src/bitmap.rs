@@ -24,7 +24,7 @@ impl BitMap {
         // read the bit
         let v = &self.map[(index / 8) as usize];
         let mask = self.get_mask( (index % 8) as u8 );
-        return ( v & mask ) > 0;
+        return ( v & mask ) <= 0;
     }
 
     pub fn set_bit( &mut self, index: u32, value: bool ) -> () {
@@ -32,8 +32,8 @@ impl BitMap {
         let mask = self.get_mask( (index % 8) as u8);
         let v = &mut self.map[(index / 8) as usize];
         match value {
-            true => *v = *v | mask,
-            false => *v = *v & !mask
+            false => *v = *v | mask,
+            true => *v = *v & !mask
         }
 
     }

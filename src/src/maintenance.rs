@@ -4,8 +4,9 @@ use std::path::Path;
 use byteorder::{BigEndian, WriteBytesExt};
 use super::dir::{Dir, DirEntry};
 use std::io::prelude::*;
+use super::fusebindings::FuseBindFS;
 
-pub fn initialise_fs( file_name: &Path ) -> File {
+pub fn initialise_fs( file_name: &Path ) {
     let mut file = match  OpenOptions::new()
                            .read(true)
                            .write(true)
@@ -16,7 +17,10 @@ pub fn initialise_fs( file_name: &Path ) -> File {
     };
 
     write_super_block( &mut file );
-    return file;
+    let mut fs = FuseBindFS::new( file );
+    fs.imap.set_bit( 0, false );
+    let first_ino = fs.make_dir( 0, 0, 0o777, 0 );
+    println!("Created ino {}", first_ino);
 }
 
 fn write_super_block ( file: &mut File ) {

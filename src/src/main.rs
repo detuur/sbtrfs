@@ -34,5 +34,5 @@ fn mount( volume_path:&Path, mountpoint:&Path ) {
 }
 
 fn create( path:&Path) {
-    let file = maintenance::initialise_fs( &path );
+    maintenance::initialise_fs( &path );
 }
